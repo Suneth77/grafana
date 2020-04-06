@@ -1,0 +1,2 @@
+grafana_ebs_vol: /dev/sdb
+grafana_mysql_host: 127.0.0.1

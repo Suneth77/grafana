@@ -1,0 +1,10 @@
+---
+    - hosts: localhost
+      remote_user: "{{ ansible_system_user }}"
+      vars_files:
+        - extra_vars.yml
+      roles:
+        - { role: memcached }
+        - { role: mysql }
+        - { role: grafana }
+        - { role: nginx }

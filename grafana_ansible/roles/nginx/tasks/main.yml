@@ -1,0 +1,79 @@
+---
+#
+# Install/run nginx
+#
+- name: Check/Install EPEL Repo for nginx
+  yum: 
+      name: "{{ epel_repo }}"
+      state: present
+  become: true
+
+- name: Install nginx, httpd-tools, httplib2
+  yum: 
+    name:
+      - nginx-{{ nginx_version }}
+      - httpd-tools
+      - python-httplib2
+    state: present
+  register: installed
+  ignore_errors: true
+  become: true
+
+- name: Clean yum metadata caches if installation fails
+  debug: 
+    msg: "notifying handler to clean yum metadata"
+  changed_when: installed.rc != 0
+  notify: clean-yum-metadata
+
+# create /etc/nginx/conf.d/ directory
+- name: Create nginx directory structure
+  file: 
+    path: /etc/nginx/conf.d/
+    state: directory
+    mode:  0755
+  become: true
+
+# deploy grafana.conf with FQDN
+- name: Setup nginx reverse proxy for grafana
+  template:
+    src: grafana.conf.j2
+    dest: /etc/nginx/conf.d/grafana.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  register: grafanaconf
+
+# deploy basic nginx.conf vhost
+- name: Setup nginx vhosts 
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  register: nginxconf
+
+# start nginx service
+- name: Start and enable nginx service
+  service:
+    name: nginx 
+    state: started
+    enabled: true
+  become: true
+
+- name: Restart nginx if configurations are changed
+  service:
+    name: nginx 
+    state: restarted
+    enabled: true
+  when: kibanaconf.changed or grafanaconf.changed or nginxconf.changed
+  become: true
+
+# we only want to enable EPEL for some packages
+- name: Remove EPEL Repo
+  yum: 
+    name: "{{ epel_repo }}"
+    state: absent
+  become: true

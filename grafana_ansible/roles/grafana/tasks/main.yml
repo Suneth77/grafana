@@ -1,0 +1,87 @@
+---
+#Create data directory for mounting
+- name: Create data directory for mounting
+  file: 
+    path: "{{ grafana_data_dir }}"
+    state: directory
+    mode:  0755
+    owner: root
+    group: root
+  become: true
+
+#Mount ebs volume to grafana data directory
+- name: Mount ebs volume to grafana data directory
+  mount:
+    path: "{{ grafana_data_dir }}"
+    src: "{{ grafana_ebs_vol }}"
+    fstype: ext4
+    opts: defaults
+    state: mounted
+  become: true
+
+# Install/run Grafana
+- name: Copy Grafana yum repo file
+  copy:
+    src: grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Install Grafana
+  yum:
+    name:
+      - grafana-{{ grafana_version }}
+    state: present
+  become: true
+
+- name: Copy templated grafana.ini
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+    owner: root
+    group: grafana
+    mode: 0640
+  vars:
+    admin_pw: "1qaz2wsx@"
+    db_pw: "1qaz2wsx@"
+  become: true
+  ignore_errors: true
+  register: grafanaconfig
+
+- name: Create grafana data directory
+  file: 
+    path: "{{ grafana_data_dir }}/grafana/plugins"
+    state: directory
+    mode:  0775
+    owner: grafana
+    group: grafana
+    recurse: true
+  become: true
+
+- name: Create grafana conf directory
+  file: 
+    path: "{{ grafana_data_dir }}/grafana/conf/provisioning"
+    state: directory
+    mode:  0775
+    owner: root
+    group: grafana
+    recurse: true
+  become: true
+
+
+- name: Start and enable grafana service
+  service: 
+    name: grafana-server 
+    state: started
+    enabled: true
+  become: true
+
+- name: Restart grafana if config file is updated
+  service: 
+    name: grafana-server 
+    state: restarted
+    enabled: true
+  become: true
+  when: grafanaconfig.changed

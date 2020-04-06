@@ -1,0 +1,4 @@
+---
+memcached_version: 1.4.15-10.15.amzn1
+memcached_port: 11211
+memcached_bind_ip: 127.0.0.1

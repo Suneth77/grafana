@@ -1,0 +1,9 @@
+---
+
+epel_repo: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+nginx_http_port: 80
+nginx_https_port: 443
+grafana_fqdn: "grafana.linnworks.com"
+grafana_port: 3000
+
+nginx_version: 1.12.1-1.33.amzn1

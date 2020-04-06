@@ -1,0 +1,11 @@
+---
+  grafana_version: 6.3.5-1
+  grafana_port: 3000
+  grafana_data_dir: /data
+  memcached_port: 11211
+  memcached_host: 127.0.0.1
+  #grafana_domain_name: grafana.linnworks.com
+  #grafana_root_url: https://grafana.linnworks.com
+  grafana_mysql_port: 3306
+  grafana_db: grafana
+  grafana_db_user: grafana_user
