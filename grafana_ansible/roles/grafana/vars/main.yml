@@ -8,4 +8,4 @@
   #grafana_root_url: https://grafana.linnworks.com
   grafana_mysql_port: 3306
   grafana_db: grafana
-  grafana_db_user: grafana_user
+  grafana_db_user: root
