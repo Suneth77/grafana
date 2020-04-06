@@ -36,3 +36,9 @@
 
 - name: remove the MySQL test database
   action: mysql_db db=test state=absent
+
+- name: Create a new database
+  mysql_db: name=grafana state=present
+
+- name: Create a database user
+  mysql_user: name=grafana_user password=1qaz2wsx@ priv=*.*:ALL host=localhost 
