@@ -68,7 +68,7 @@
     name: nginx 
     state: restarted
     enabled: true
-  when: kibanaconf.changed or grafanaconf.changed or nginxconf.changed
+  when: grafanaconf.changed or nginxconf.changed
   become: true
 
 # we only want to enable EPEL for some packages
