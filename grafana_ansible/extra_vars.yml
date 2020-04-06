@@ -1,2 +1,6 @@
+#Default Ansible user
+#change this if you use a non-root user for running Ansible playbooks
+ansible_system_user: root
+
 grafana_ebs_vol: /dev/sdb
 grafana_mysql_host: 127.0.0.1
