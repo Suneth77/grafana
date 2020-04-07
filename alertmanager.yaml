@@ -26,7 +26,7 @@ alertmanagerFiles:
         - name: 'null'
         - name: 'slack'
           slack_configs:
-          - api_url: 'https://hooks.slack.com/services/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' # <--- REPLACE THIS WITH YOUR SLACK WEBHOOK
+          - api_url: 'xxxxx' # <--- REPLACE THIS WITH YOUR SLACK WEBHOOK
             send_resolved: true
             channel: '#elk-alerts' # <--- REPLACE THIS WITH YOUR SLACK CHANNEL
             title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] Monitoring Event Notification'
